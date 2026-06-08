@@ -17,10 +17,11 @@ export const useAuthStore = create((set) => ({
   },
 
   signUp: async (email, password, name) => {
+    const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name } },
+      options: { data: { name }, emailRedirectTo: `${siteUrl}/login` },
     })
     if (error) throw error
     return data
