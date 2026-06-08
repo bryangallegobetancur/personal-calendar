@@ -1,9 +1,43 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useAuthStore } from '../../store/authStore'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 
-function PasswordInput({ label, id, value, onChange, showPassword, onToggleShow }) {
+function getPasswordStrength(password) {
+  if (!password) return null
+  if (password.length < 8) return { label: 'Débil', level: 0, color: 'bg-red-500', textColor: 'text-red-600' }
+  let categories = 0
+  if (/[a-z]/.test(password)) categories++
+  if (/[A-Z]/.test(password)) categories++
+  if (/[0-9]/.test(password)) categories++
+  if (/[^a-zA-Z0-9]/.test(password)) categories++
+  if (password.length >= 12 && categories >= 2) return { label: 'Fuerte', level: 2, color: 'bg-green-500', textColor: 'text-green-600' }
+  if (categories >= 3) return { label: 'Fuerte', level: 2, color: 'bg-green-500', textColor: 'text-green-600' }
+  if (categories >= 2) return { label: 'Media', level: 1, color: 'bg-yellow-500', textColor: 'text-yellow-600' }
+  return { label: 'Débil', level: 0, color: 'bg-red-500', textColor: 'text-red-600' }
+}
+
+function PasswordStrengthBar({ password }) {
+  const strength = useMemo(() => getPasswordStrength(password), [password])
+  if (!strength) return null
+  return (
+    <div className="mt-1 space-y-1">
+      <div className="flex gap-1">
+        {[0, 1, 2].map((level) => (
+          <div
+            key={level}
+            className={`h-1.5 flex-1 rounded-full transition-colors ${
+              level <= strength.level ? strength.color : 'bg-gray-200'
+            }`}
+          />
+        ))}
+      </div>
+      <p className={`text-xs ${strength.textColor}`}>{strength.label}</p>
+    </div>
+  )
+}
+
+function PasswordInput({ label, id, value, onChange, onBlur, showPassword, onToggleShow, error }) {
   return (
     <div className="space-y-1">
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
@@ -15,8 +49,11 @@ function PasswordInput({ label, id, value, onChange, showPassword, onToggleShow 
           type={showPassword ? 'text' : 'password'}
           value={value}
           onChange={onChange}
+          onBlur={onBlur}
           required
-          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+            error ? 'border-red-500' : 'border-gray-300'
+          }`}
         />
         <button
           type="button"
@@ -35,6 +72,7 @@ function PasswordInput({ label, id, value, onChange, showPassword, onToggleShow 
           )}
         </button>
       </div>
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   )
 }
@@ -46,16 +84,39 @@ export function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [passwordMismatch, setPasswordMismatch] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const signUp = useAuthStore((s) => s.signUp)
+
+  const checkMismatch = () => {
+    if (confirmPassword && password !== confirmPassword) {
+      setPasswordMismatch(true)
+    } else {
+      setPasswordMismatch(false)
+    }
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value)
+    if (passwordMismatch && e.target.value === confirmPassword) {
+      setPasswordMismatch(false)
+    }
+  }
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value)
+    if (passwordMismatch && password === e.target.value) {
+      setPasswordMismatch(false)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setPasswordMismatch(true)
       return
     }
 
@@ -91,17 +152,20 @@ export function RegisterForm() {
         label="Password"
         id="reg-password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={handlePasswordChange}
         showPassword={showPassword}
         onToggleShow={() => setShowPassword(!showPassword)}
       />
+      <PasswordStrengthBar password={password} />
       <PasswordInput
         label="Confirm Password"
         id="reg-confirm-password"
         value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        onChange={handleConfirmPasswordChange}
+        onBlur={checkMismatch}
         showPassword={showConfirmPassword}
         onToggleShow={() => setShowConfirmPassword(!showConfirmPassword)}
+        error={passwordMismatch ? 'Las contraseñas no coinciden' : ''}
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
       <Button type="submit" disabled={loading} className="w-full">
