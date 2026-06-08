@@ -86,6 +86,7 @@ export function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [passwordMismatch, setPasswordMismatch] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const signUp = useAuthStore((s) => s.signUp)
 
@@ -122,12 +123,33 @@ export function RegisterForm() {
 
     setLoading(true)
     try {
-      await signUp(email, password, name)
+      const result = await signUp(email, password, name)
+      if (result?.user?.identities?.length === 0) {
+        setError('Este correo ya está registrado. Inicia sesión.')
+      } else {
+        setSuccess(true)
+      }
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="text-center space-y-4 py-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100">
+          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2 className="text-xl font-semibold text-gray-800">Revisa tu correo</h2>
+        <p className="text-sm text-gray-500">
+          Te enviamos un enlace de confirmación a <strong>{email}</strong>.
+        </p>
+      </div>
+    )
   }
 
   return (
