@@ -54,12 +54,12 @@ export function EventForm({ event, onSubmit, onCancel, integrations }) {
       />
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
         <textarea
           value={form.description}
           onChange={(e) => update('description', e.target.value)}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors"
         />
       </div>
 
@@ -112,7 +112,7 @@ export function EventForm({ event, onSubmit, onCancel, integrations }) {
       )}
 
       {integrations?.whatsapp?.connected && (
-        <div className="space-y-2 p-3 bg-gray-50 rounded-lg">
+        <div className="space-y-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg transition-colors">
           <Checkbox
             id="whatsapp-reminder"
             label="Send reminder via WhatsApp"
@@ -121,11 +121,11 @@ export function EventForm({ event, onSubmit, onCancel, integrations }) {
           />
           {form.whatsapp_reminder && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Remind me</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Remind me</label>
               <select
                 value={form.reminder_before_minutes}
                 onChange={(e) => update('reminder_before_minutes', parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors"
               >
                 {REMINDER_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -140,7 +140,7 @@ export function EventForm({ event, onSubmit, onCancel, integrations }) {
 
       <div className="flex justify-end gap-2 pt-2">
         <Button variant="secondary" onClick={onCancel}>
-          Cancel
+         Cancel
         </Button>
         <Button type="submit">{event ? 'Update' : 'Create'} Event</Button>
       </div>

@@ -3,6 +3,7 @@ import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 import { Checkbox } from '../ui/Checkbox'
+import { WhatsAppIcon } from '../ui/Icons'
 
 export function WhatsAppConnect({ connected, onConnect, onDisconnect }) {
   const [showModal, setShowModal] = useState(false)
@@ -25,12 +26,12 @@ export function WhatsAppConnect({ connected, onConnect, onDisconnect }) {
 
   if (connected) {
     return (
-      <div className="flex items-center justify-between p-4 border rounded-lg">
+      <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 transition-colors">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🟢</span>
+          <WhatsAppIcon className="w-8 h-8" />
           <div>
-            <p className="font-medium">WhatsApp Reminders</p>
-            <p className="text-sm text-green-600">Connected</p>
+            <p className="font-medium text-gray-900 dark:text-gray-100">WhatsApp Reminders</p>
+            <p className="text-sm text-green-600 dark:text-green-400">Connected</p>
           </div>
         </div>
         <Button variant="danger" onClick={onDisconnect}>
@@ -42,12 +43,12 @@ export function WhatsAppConnect({ connected, onConnect, onDisconnect }) {
 
   return (
     <>
-      <div className="flex items-center justify-between p-4 border rounded-lg">
+      <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 transition-colors">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🟢</span>
+          <WhatsAppIcon className="w-8 h-8" />
           <div>
-            <p className="font-medium">WhatsApp Reminders</p>
-            <p className="text-sm text-gray-400">Not connected</p>
+            <p className="font-medium text-gray-900 dark:text-gray-100">WhatsApp Reminders</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">Not connected</p>
           </div>
         </div>
         <Button onClick={() => setShowModal(true)}>Connect</Button>
@@ -55,14 +56,14 @@ export function WhatsAppConnect({ connected, onConnect, onDisconnect }) {
 
       <Modal open={showModal} onClose={() => setShowModal(false)} title="Connect WhatsApp">
         <div className="space-y-4">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-3 text-sm text-yellow-800 dark:text-yellow-200">
             <p className="font-medium mb-1">Permissions requested:</p>
             <ul className="list-disc list-inside">
               <li>Send reminder messages to your WhatsApp number</li>
             </ul>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3 text-sm text-blue-800 dark:text-blue-200">
             <p className="font-medium mb-1">How we will use this:</p>
             <p>We use WhatsApp to send you timely reminders about your upcoming appointments. We will never share your number or send spam.</p>
           </div>

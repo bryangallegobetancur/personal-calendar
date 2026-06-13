@@ -27,7 +27,7 @@ function PasswordStrengthBar({ password }) {
           <div
             key={level}
             className={`h-1.5 flex-1 rounded-full transition-colors ${
-              level <= strength.level ? strength.color : 'bg-gray-200'
+              level <= strength.level ? strength.color : 'bg-gray-200 dark:bg-gray-700'
             }`}
           />
         ))}
@@ -40,7 +40,7 @@ function PasswordStrengthBar({ password }) {
 function PasswordInput({ label, id, value, onChange, onBlur, showPassword, onToggleShow, error }) {
   return (
     <div className="space-y-1">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
         {label}
       </label>
       <div className="relative">
@@ -51,14 +51,14 @@ function PasswordInput({ label, id, value, onChange, onBlur, showPassword, onTog
           onChange={onChange}
           onBlur={onBlur}
           required
-          className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-            error ? 'border-red-500' : 'border-gray-300'
+          className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors ${
+            error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
           }`}
         />
         <button
           type="button"
           onClick={onToggleShow}
-          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
         >
           {showPassword ? (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,7 +72,7 @@ function PasswordInput({ label, id, value, onChange, onBlur, showPassword, onTog
           )}
         </button>
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
     </div>
   )
 }
@@ -139,13 +139,13 @@ export function RegisterForm() {
   if (success) {
     return (
       <div className="text-center space-y-4 py-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100">
-          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30">
+          <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-gray-800">Revisa tu correo</h2>
-        <p className="text-sm text-gray-500">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Revisa tu correo</h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           Te enviamos un enlace de confirmación a <strong>{email}</strong>.
         </p>
       </div>
@@ -189,7 +189,7 @@ export function RegisterForm() {
         onToggleShow={() => setShowConfirmPassword(!showConfirmPassword)}
         error={passwordMismatch ? 'Las contraseñas no coinciden' : ''}
       />
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
       <Button type="submit" disabled={loading} className="w-full">
         {loading ? 'Creating account...' : 'Create Account'}
       </Button>
