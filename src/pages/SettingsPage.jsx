@@ -46,18 +46,18 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-8">
-      <h1 className="text-2xl font-bold">Settings</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Profile</h2>
-        <div className="bg-white rounded-lg shadow p-4 space-y-4">
+        <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Profile</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 space-y-4 transition-colors">
           <Input
             label="Name"
             id="profile-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <p className="text-sm text-gray-500">Email: {user?.email}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Email: {user?.email}</p>
           <Button onClick={handleSaveProfile} disabled={saving}>
             {saving ? 'Saving...' : 'Save'}
           </Button>
@@ -65,7 +65,7 @@ export function SettingsPage() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold mb-4">Integrations</h2>
+        <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Integrations</h2>
         <div className="space-y-3">
           <GoogleCalendarConnect
             connected={!!integrations.google?.connected}

@@ -3,7 +3,7 @@ import { EventCard } from '../calendar/EventCard'
 export function EventList({ events, onEventClick }) {
   if (!events.length) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
         No events found. Create one to get started!
       </div>
     )
