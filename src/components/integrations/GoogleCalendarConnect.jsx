@@ -3,6 +3,7 @@ import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { Checkbox } from '../ui/Checkbox'
 import { ConsentModal } from './ConsentModal'
+import { GoogleIcon } from '../ui/Icons'
 
 export function GoogleCalendarConnect({ connected, onConnect, onDisconnect }) {
   const [showConsent, setShowConsent] = useState(false)
@@ -27,12 +28,12 @@ export function GoogleCalendarConnect({ connected, onConnect, onDisconnect }) {
 
   if (connected) {
     return (
-      <div className="flex items-center justify-between p-4 border rounded-lg">
+      <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 transition-colors">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🔵</span>
+          <GoogleIcon className="w-8 h-8" />
           <div>
-            <p className="font-medium">Google Calendar</p>
-            <p className="text-sm text-green-600">Connected</p>
+            <p className="font-medium text-gray-900 dark:text-gray-100">Google Calendar</p>
+            <p className="text-sm text-green-600 dark:text-green-400">Connected</p>
           </div>
         </div>
         <Button variant="danger" onClick={onDisconnect}>
@@ -44,12 +45,12 @@ export function GoogleCalendarConnect({ connected, onConnect, onDisconnect }) {
 
   return (
     <>
-      <div className="flex items-center justify-between p-4 border rounded-lg">
+      <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-white dark:bg-gray-900 transition-colors">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🔵</span>
+          <GoogleIcon className="w-8 h-8" />
           <div>
-            <p className="font-medium">Google Calendar</p>
-            <p className="text-sm text-gray-400">Not connected</p>
+            <p className="font-medium text-gray-900 dark:text-gray-100">Google Calendar</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500">Not connected</p>
           </div>
         </div>
         <Button onClick={() => setShowConsent(true)}>Connect</Button>
