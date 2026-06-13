@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { LoginForm } from '../components/auth/LoginForm'
 import { RegisterForm } from '../components/auth/RegisterForm'
-import { Button } from '../components/ui/Button'
 
 export function LoginPage() {
   const [mode, setMode] = useState('login')

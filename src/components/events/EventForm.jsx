@@ -140,7 +140,7 @@ export function EventForm({ event, onSubmit, onCancel, integrations }) {
 
       <div className="flex justify-end gap-2 pt-2">
         <Button variant="secondary" onClick={onCancel}>
-          Cancel
+         Cancel
         </Button>
         <Button type="submit">{event ? 'Update' : 'Create'} Event</Button>
       </div>

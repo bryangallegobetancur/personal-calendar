@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import {
   startOfMonth,
   endOfMonth,
@@ -9,7 +9,6 @@ import {
   addMonths,
   subMonths,
   isSameMonth,
-  isSameDay,
   isToday,
 } from 'date-fns'
 import { EventCard } from './EventCard'
@@ -27,18 +26,18 @@ export function MonthView({ events, onDateClick, onEventClick }) {
     events.filter((e) => e.event_date === format(day, 'yyyy-MM-dd'))
 
   return (
-    <div>
+    <div className="p-4">
       <div className="flex items-center justify-between mb-4">
         <button
           onClick={() => setCurrentDate((d) => subMonths(d, 1))}
-          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
         >
           &larr; Prev
         </button>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{format(currentDate, 'MMMM yyyy')}</h2>
         <button
           onClick={() => setCurrentDate((d) => addMonths(d, 1))}
-          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
         >
           Next &rarr;
         </button>
