@@ -9,6 +9,18 @@ const REMINDER_OPTIONS = [
   { value: 1440, label: '1 day before' },
 ]
 
+const STATUS_OPTIONS = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+]
+
+const STATUS_STYLES = {
+  pending: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+  completed: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+}
+
 export function EventForm({ event, onSubmit, onCancel, integrations }) {
   const [form, setForm] = useState({
     title: event?.title || '',
@@ -92,6 +104,30 @@ export function EventForm({ event, onSubmit, onCancel, integrations }) {
         value={form.duration_minutes}
         onChange={(e) => update('duration_minutes', parseInt(e.target.value) || 60)}
       />
+
+      {event && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Change status
+            <span
+              className={`ml-2 inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full ${STATUS_STYLES[form.status] || STATUS_STYLES.pending}`}
+            >
+              {STATUS_OPTIONS.find((s) => s.value === form.status)?.label || 'Pending'}
+            </span>
+          </label>
+          <select
+            value={form.status}
+            onChange={(e) => update('status', e.target.value)}
+            className="w-full h-12 px-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors"
+          >
+            {STATUS_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {integrations?.google?.connected && (
         <Checkbox
