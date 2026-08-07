@@ -21,10 +21,15 @@ export function WeekView({ events, onDateClick, onEventClick }) {
 
   const getEventsForDayHour = (day, hour) =>
     events.filter((e) => {
+      if (e.is_all_day || e.end_date) return false
       const eventDate = e.event_date
-      const eventHour = parseInt(e.event_time.split(':')[0], 10)
+      const eventHour = parseInt(e.event_time?.split(':')[0], 10)
       return eventDate === format(day, 'yyyy-MM-dd') && eventHour === hour
     })
+
+  const allDayEvents = events.filter(
+    (e) => e.is_all_day && e.event_date >= format(weekStart, 'yyyy-MM-dd') && e.event_date <= format(weekEnd, 'yyyy-MM-dd')
+  )
 
   return (
     <div className="p-4">
@@ -45,6 +50,17 @@ export function WeekView({ events, onDateClick, onEventClick }) {
           Next Week &rarr;
         </button>
       </div>
+
+      {allDayEvents.length > 0 && (
+        <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+          <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">All Day</span>
+          <div className="mt-1 flex flex-wrap gap-1">
+            {allDayEvents.map((ev) => (
+              <EventCard key={ev.id} event={ev} onClick={() => onEventClick(ev)} compact />
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="overflow-auto max-h-[600px] border border-gray-200 dark:border-gray-800 rounded-lg transition-colors">
         <div className="grid grid-cols-8 min-w-[600px]">

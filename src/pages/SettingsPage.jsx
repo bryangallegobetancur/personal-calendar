@@ -6,16 +6,24 @@ import { WhatsAppConnect } from '../components/integrations/WhatsAppConnect'
 import { Input } from '../components/ui/Input'
 import { Button } from '../components/ui/Button'
 import { useIntegrations } from '../hooks/useIntegrations'
+import { requestNotificationPermission } from '../lib/pushNotifications'
 
 export function SettingsPage() {
   const { user, profile, updateProfile, fetchProfile } = useAuthStore()
   const { integrations, disconnectIntegration, saveIntegration } = useIntegrations()
   const [name, setName] = useState('')
   const [saving, setSaving] = useState(false)
+  const [pushEnabled, setPushEnabled] = useState(false)
 
   useEffect(() => {
     if (profile) setName(profile.name || '')
   }, [profile])
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      setPushEnabled(Notification.permission === 'granted')
+    }
+  }, [])
 
   const handleSaveProfile = async () => {
     if (!user) return
@@ -27,6 +35,15 @@ export function SettingsPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const handleTogglePush = async () => {
+    if (pushEnabled) {
+      setPushEnabled(false)
+      return
+    }
+    const result = await requestNotificationPermission()
+    if (result) setPushEnabled(true)
   }
 
   const handleGoogleConnect = async (tokenData) => {
@@ -79,6 +96,24 @@ export function SettingsPage() {
           <Button onClick={handleSaveProfile} disabled={saving}>
             {saving ? 'Saving...' : 'Save'}
           </Button>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Notifications</h2>
+        <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-4 transition-colors">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Push Notifications</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Receive reminders in your browser</p>
+            </div>
+            <button
+              onClick={handleTogglePush}
+              className={`relative w-12 h-6 rounded-full transition-colors ${pushEnabled ? 'bg-primary-600' : 'bg-gray-300 dark:bg-gray-600'}`}
+            >
+              <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${pushEnabled ? 'translate-x-6' : ''}`} />
+            </button>
+          </div>
         </div>
       </section>
 

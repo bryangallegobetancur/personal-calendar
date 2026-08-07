@@ -26,26 +26,29 @@ export function MonthView({ events, onDateClick, onEventClick }) {
     events.filter((e) => e.event_date === format(day, 'yyyy-MM-dd'))
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="p-4 sm:p-6">
+      <div className="flex items-center justify-between mb-4 gap-2">
         <button
           onClick={() => setCurrentDate((d) => subMonths(d, 1))}
-          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+          className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-primary-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
         >
-          &larr; Prev
+          <span className="hidden sm:inline">&larr; Prev</span><span className="sm:hidden">&larr;</span>
         </button>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{format(currentDate, 'MMMM yyyy')}</h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">{format(currentDate, 'MMMM yyyy')}</h2>
+          <button onClick={() => setCurrentDate(new Date())} className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline">Today</button>
+        </div>
         <button
           onClick={() => setCurrentDate((d) => addMonths(d, 1))}
-          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
+          className="px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-primary-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors"
         >
-          Next &rarr;
+          <span className="hidden sm:inline">Next &rarr;</span><span className="sm:hidden">&rarr;</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-800 rounded-lg overflow-hidden">
+      <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-          <div key={d} className="bg-gray-50 dark:bg-gray-800/50 p-2 text-center text-xs font-medium text-gray-500 dark:text-gray-400">
+            <div key={d} className="bg-gray-50 dark:bg-gray-800/50 p-2.5 text-center text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
             {d}
           </div>
         ))}
@@ -58,13 +61,13 @@ export function MonthView({ events, onDateClick, onEventClick }) {
             <div
               key={day.toISOString()}
               onClick={() => onDateClick(format(day, 'yyyy-MM-dd'))}
-              className={`bg-white dark:bg-gray-900 p-1 min-h-[80px] cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors ${
+              className={`bg-white dark:bg-gray-900 p-2 min-h-[96px] cursor-pointer hover:bg-primary-50 dark:hover:bg-gray-800 transition-colors ${
                 !isCurrentMonth ? 'opacity-40' : ''
               } ${isToday(day) ? 'bg-blue-50 dark:bg-gray-800' : ''}`}
             >
               <span
                 className={`inline-flex items-center justify-center w-6 h-6 text-xs rounded-full ${
-                  isToday(day) ? 'bg-primary-600 text-white' : 'text-gray-700 dark:text-gray-300'
+                    isToday(day) ? 'bg-primary-600 text-white shadow-sm' : 'text-gray-700 dark:text-gray-300'
                 }`}
               >
                 {format(day, 'd')}
