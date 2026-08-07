@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   format,
   addMonths,
@@ -13,7 +13,7 @@ import {
 } from 'date-fns'
 import { GoogleIcon, OutlookIcon, WhatsAppIcon } from '../ui/Icons'
 
-export function Sidebar({ integrations }) {
+export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
   const [currentDate, setCurrentDate] = useState(new Date())
 
   const monthStart = startOfMonth(currentDate)
@@ -30,13 +30,18 @@ export function Sidebar({ integrations }) {
     { key: 'whatsapp', label: 'WhatsApp', icon: <WhatsAppIcon className="w-4 h-4" />, badgeClass: 'bg-[#25D366]' },
   ]
 
-  const todayEvents = 4
-  const weekEvents = 12
-  const completedEvents = 8
-  const pendingEvents = 5
+  const stats = useMemo(() => {
+    const today = format(new Date(), 'yyyy-MM-dd')
+    const weekStart = format(startOfWeek(new Date()), 'yyyy-MM-dd')
+    const todayEvents = events.filter((e) => e.event_date === today).length
+    const weekEvents = events.filter((e) => e.event_date >= weekStart).length
+    const completedEvents = events.filter((e) => e.status === 'completed').length
+    const pendingEvents = events.filter((e) => e.status === 'pending').length
+    return { todayEvents, weekEvents, completedEvents, pendingEvents }
+  }, [events])
 
   return (
-    <aside className="w-[280px] flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6 fixed top-16 bottom-0 transition-colors hidden lg:flex flex-col gap-6">
+    <aside className="w-[280px] flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6 fixed top-16 bottom-0 transition-colors hidden lg:flex flex-col gap-7 shadow-sm">
       {/* Mini Calendar */}
       <section>
         <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
@@ -69,12 +74,13 @@ export function Sidebar({ integrations }) {
             return (
               <span
                 key={day.toISOString()}
-                className={`py-1 rounded-md cursor-pointer transition-colors ${
+                onClick={() => onMiniCalendarClick?.(day)}
+                className={`py-1.5 rounded-lg cursor-pointer transition-colors ${
                   isTodayDay
                     ? 'bg-primary-600 text-white font-semibold'
                     : isOther
                       ? 'text-gray-300 dark:text-gray-600'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800'
                 }`}
               >
                 {format(day, 'd')}
@@ -85,7 +91,7 @@ export function Sidebar({ integrations }) {
       </section>
 
       {/* Integrations */}
-      <section>
+      <section data-onboarding="integrations">
         <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
           Integrations
         </h3>
@@ -121,22 +127,22 @@ export function Sidebar({ integrations }) {
         <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
           Quick Stats
         </h3>
-        <div className="text-sm text-gray-500 dark:text-gray-400 flex flex-col gap-2">
+        <div className="text-sm text-gray-500 dark:text-gray-400 flex flex-col gap-2.5">
           <div className="flex justify-between">
             <span>Events today</span>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">{todayEvents}</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-100">{stats.todayEvents}</span>
           </div>
           <div className="flex justify-between">
             <span>This week</span>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">{weekEvents}</span>
+            <span className="font-semibold text-gray-900 dark:text-gray-100">{stats.weekEvents}</span>
           </div>
           <div className="flex justify-between">
             <span>Completed</span>
-            <span className="font-semibold text-green-500">{completedEvents}</span>
+            <span className="font-semibold text-green-500">{stats.completedEvents}</span>
           </div>
           <div className="flex justify-between">
             <span>Pending</span>
-            <span className="font-semibold text-amber-500">{pendingEvents}</span>
+            <span className="font-semibold text-amber-500">{stats.pendingEvents}</span>
           </div>
         </div>
       </section>

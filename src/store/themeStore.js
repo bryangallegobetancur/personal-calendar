@@ -1,9 +1,17 @@
 import { create } from 'zustand'
 
+const applyTheme = (mode) => {
+  document.documentElement.classList.toggle('dark', mode === 'dark')
+  document.documentElement.classList.toggle('theme-light', mode === 'light')
+}
+
 const getInitialMode = () => {
   const stored = localStorage.getItem('theme')
-  if (stored) return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const mode = stored === 'dark' || stored === 'light' ? stored : (prefersDark ? 'dark' : 'light')
+  localStorage.setItem('theme', mode)
+  applyTheme(mode)
+  return mode
 }
 
 export const useThemeStore = create((set) => ({
@@ -12,12 +20,13 @@ export const useThemeStore = create((set) => ({
     set((state) => {
       const next = state.mode === 'dark' ? 'light' : 'dark'
       localStorage.setItem('theme', next)
-      document.documentElement.classList.toggle('dark', next === 'dark')
+      applyTheme(next)
       return { mode: next }
     }),
   setMode: (mode) => {
-    localStorage.setItem('theme', mode)
-    document.documentElement.classList.toggle('dark', mode === 'dark')
-    set({ mode })
+    const next = mode === 'dark' ? 'dark' : 'light'
+    localStorage.setItem('theme', next)
+    applyTheme(next)
+    set({ mode: next })
   },
 }))
