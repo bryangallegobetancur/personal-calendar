@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
-import { Checkbox } from '../ui/Checkbox'
 import { ConsentModal } from './ConsentModal'
 import { GoogleIcon } from '../ui/Icons'
+import { generateCodeVerifier, generateCodeChallenge, generateState } from '../../lib/pkce'
 
 export function GoogleCalendarConnect({ connected, onConnect, onDisconnect }) {
   const [showConsent, setShowConsent] = useState(false)
-  const [accepted, setAccepted] = useState(false)
 
-  const handleConnect = () => {
-    if (!accepted) return
+  const handleConnect = async () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
     const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
+
+    const codeVerifier = generateCodeVerifier()
+    const codeChallenge = await generateCodeChallenge(codeVerifier)
+    const state = generateState()
+
+    sessionStorage.setItem(`pkce_${state}`, codeVerifier)
 
     const params = new URLSearchParams({
       client_id: clientId,
@@ -21,6 +25,9 @@ export function GoogleCalendarConnect({ connected, onConnect, onDisconnect }) {
       scope: 'https://www.googleapis.com/auth/calendar',
       access_type: 'offline',
       prompt: 'consent',
+      state,
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
     })
 
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?${params}`

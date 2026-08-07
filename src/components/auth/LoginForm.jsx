@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
@@ -9,13 +10,17 @@ export function LoginForm() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const signIn = useAuthStore((s) => s.signIn)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
     try {
-      await signIn(email, password)
+      const data = await signIn(email, password)
+      if (data?.session) {
+        navigate('/', { replace: true })
+      }
     } catch (err) {
       setError(err.message)
     } finally {

@@ -29,6 +29,24 @@ export function SettingsPage() {
     }
   }
 
+  const handleGoogleConnect = async (tokenData) => {
+    if (!user) return
+    await saveIntegration('google', {
+      ...tokenData,
+      connected: true,
+      connected_at: new Date().toISOString(),
+    })
+  }
+
+  const handleOutlookConnect = async (tokenData) => {
+    if (!user) return
+    await saveIntegration('outlook', {
+      ...tokenData,
+      connected: true,
+      connected_at: new Date().toISOString(),
+    })
+  }
+
   const handleWhatsAppConnect = async (phone) => {
     if (!user) return
     await updateProfile(user.id, { phone, whatsapp_consent: true })
@@ -69,10 +87,12 @@ export function SettingsPage() {
         <div className="space-y-3">
           <GoogleCalendarConnect
             connected={!!integrations.google?.connected}
+            onConnect={handleGoogleConnect}
             onDisconnect={() => disconnectIntegration('google')}
           />
           <OutlookConnect
             connected={!!integrations.outlook?.connected}
+            onConnect={handleOutlookConnect}
             onDisconnect={() => disconnectIntegration('outlook')}
           />
           <WhatsAppConnect

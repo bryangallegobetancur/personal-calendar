@@ -29,27 +29,40 @@ export function useIntegrations() {
     fetchIntegrations()
   }, [fetchIntegrations])
 
-  const saveIntegration = async (service, data) => {
+  const saveIntegration = async (service, integrationData) => {
     const payload = {
       user_id: user.id,
       service,
-      ...data,
+      access_token: integrationData.access_token || null,
+      refresh_token: integrationData.refresh_token || null,
+      token_expires_at: integrationData.token_expires_at || null,
+      connected: integrationData.connected ?? true,
+      connected_at: integrationData.connected_at || new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     }
 
     const existing = integrations[service]
 
     if (existing) {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('integrations')
-        .update({ ...payload, updated_at: new Date().toISOString() })
+        .update(payload)
         .eq('id', existing.id)
+        .select()
+        .single()
       if (error) throw error
+      setIntegrations((prev) => ({ ...prev, [service]: data }))
+      return data
     } else {
-      const { error } = await supabase.from('integrations').insert([payload])
+      const { data, error } = await supabase
+        .from('integrations')
+        .insert([payload])
+        .select()
+        .single()
       if (error) throw error
+      setIntegrations((prev) => ({ ...prev, [service]: data }))
+      return data
     }
-
-    await fetchIntegrations()
   }
 
   const disconnectIntegration = async (service) => {

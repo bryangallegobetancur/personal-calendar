@@ -3,14 +3,21 @@ import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { ConsentModal } from './ConsentModal'
 import { OutlookIcon } from '../ui/Icons'
+import { generateCodeVerifier, generateCodeChallenge, generateState } from '../../lib/pkce'
 
 export function OutlookConnect({ connected, onConnect, onDisconnect }) {
   const [showConsent, setShowConsent] = useState(false)
 
-  const handleConnect = () => {
+  const handleConnect = async () => {
     const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID
     const redirectUri = import.meta.env.VITE_MICROSOFT_REDIRECT_URI
     const tenantId = import.meta.env.VITE_MICROSOFT_TENANT_ID || 'common'
+
+    const codeVerifier = generateCodeVerifier()
+    const codeChallenge = await generateCodeChallenge(codeVerifier)
+    const state = generateState()
+
+    sessionStorage.setItem(`pkce_${state}`, codeVerifier)
 
     const params = new URLSearchParams({
       client_id: clientId,
@@ -18,6 +25,9 @@ export function OutlookConnect({ connected, onConnect, onDisconnect }) {
       response_type: 'code',
       scope: 'Calendars.ReadWrite offline_access',
       response_mode: 'query',
+      state,
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
     })
 
     window.location.href = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/authorize?${params}`
