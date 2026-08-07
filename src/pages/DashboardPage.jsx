@@ -57,6 +57,7 @@ export function DashboardPage() {
   }
 
   const handleEventClick = (event) => {
+    setSelectedDate('')
     setEditingEvent(event)
     setShowForm(true)
   }
@@ -219,7 +220,7 @@ export function DashboardPage() {
           title={editingEvent ? 'Edit Event' : 'Create Event'}
         >
           <EventForm
-            event={editingEvent ? { ...editingEvent, event_date: selectedDate || editingEvent.event_date } : { event_date: selectedDate }}
+            event={editingEvent || (selectedDate ? { event_date: selectedDate } : null)}
             onSubmit={handleSubmit}
             onCancel={() => { setShowForm(false); setEditingEvent(null) }}
             integrations={integrations}

@@ -1,9 +1,27 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { LoginForm } from '../components/auth/LoginForm'
 import { RegisterForm } from '../components/auth/RegisterForm'
+import { useAuthStore } from '../store/authStore'
 
 export function LoginPage() {
   const [mode, setMode] = useState('login')
+  const user = useAuthStore((s) => s.user)
+  const loading = useAuthStore((s) => s.loading)
+  const navigate = useNavigate()
+
+  if (!loading && user) {
+    navigate('/', { replace: true })
+    return null
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 px-4 transition-colors">

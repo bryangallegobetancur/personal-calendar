@@ -9,6 +9,7 @@ import { LoginPage } from './pages/LoginPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { EventDetailPage } from './pages/EventDetailPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { AuthCallback } from './pages/AuthCallback'
 
 export default function App() {
   const setUser = useAuthStore((s) => s.setUser)
@@ -58,6 +59,8 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/auth/google/callback" element={<AuthCallback />} />
+        <Route path="/auth/microsoft/callback" element={<AuthCallback />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
