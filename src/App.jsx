@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './lib/supabase'
 import { useAuthStore } from './store/authStore'
-import { useThemeStore } from './store/themeStore'
 import { ProtectedRoute } from './components/layout/ProtectedRoute'
 import { Navbar } from './components/layout/Navbar'
 import { LoginPage } from './pages/LoginPage'
@@ -14,7 +13,6 @@ import { AuthCallback } from './pages/AuthCallback'
 export default function App() {
   const setUser = useAuthStore((s) => s.setUser)
   const fetchProfile = useAuthStore((s) => s.fetchProfile)
-  const mode = useThemeStore((s) => s.mode)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

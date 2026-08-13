@@ -1,32 +1,34 @@
 import { create } from 'zustand'
 
-const applyTheme = (mode) => {
-  document.documentElement.classList.toggle('dark', mode === 'dark')
-  document.documentElement.classList.toggle('theme-light', mode === 'light')
+export const THEME_IDS = ['aurora', 'midnight', 'dusk']
+
+const applyTheme = (theme) => {
+  const root = document.documentElement
+  root.classList.remove('theme-aurora', 'theme-midnight', 'theme-dusk', 'theme-light', 'dark')
+  root.classList.add(`theme-${theme}`)
+  if (theme === 'midnight' || theme === 'dusk') root.classList.add('dark')
 }
 
-const getInitialMode = () => {
+const getInitialTheme = () => {
   const stored = localStorage.getItem('theme')
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-  const mode = stored === 'dark' || stored === 'light' ? stored : (prefersDark ? 'dark' : 'light')
-  localStorage.setItem('theme', mode)
-  applyTheme(mode)
-  return mode
+  let theme = THEME_IDS.includes(stored) ? stored : null
+  if (!theme) {
+    theme = stored === 'dark' ? 'midnight' : stored === 'light' ? 'aurora' : null
+  }
+  if (!theme) {
+    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'midnight' : 'aurora'
+  }
+  localStorage.setItem('theme', theme)
+  applyTheme(theme)
+  return theme
 }
 
 export const useThemeStore = create((set) => ({
-  mode: getInitialMode(),
-  toggle: () =>
-    set((state) => {
-      const next = state.mode === 'dark' ? 'light' : 'dark'
-      localStorage.setItem('theme', next)
-      applyTheme(next)
-      return { mode: next }
-    }),
-  setMode: (mode) => {
-    const next = mode === 'dark' ? 'dark' : 'light'
-    localStorage.setItem('theme', next)
-    applyTheme(next)
-    set({ mode: next })
+  theme: getInitialTheme(),
+  setTheme: (theme) => {
+    if (!THEME_IDS.includes(theme)) return
+    localStorage.setItem('theme', theme)
+    applyTheme(theme)
+    set({ theme })
   },
 }))

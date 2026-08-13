@@ -188,26 +188,26 @@ export function DashboardPage() {
       <main className="dashboard-main flex-1 min-w-0 ml-0 lg:ml-[280px] max-w-[1600px]">
         <div className="flex items-end justify-between gap-4 mb-6">
           <div>
-            <p className="text-sm font-medium text-primary-600 dark:text-primary-400 mb-1">Your schedule</p>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Calendar overview</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Keep your appointments and reminders in sync.</p>
+            <p className="text-sm font-medium text-primary mb-1">Your schedule</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">Calendar overview</h1>
+            <p className="text-sm text-muted-foreground mt-1">Keep your appointments and reminders in sync.</p>
           </div>
-          <div className="hidden sm:block text-right text-sm text-gray-500 dark:text-gray-400">
-            <div className="font-semibold text-gray-900 dark:text-gray-100">{format(new Date(), 'EEEE, MMM d')}</div>
+          <div className="hidden sm:block text-right text-sm text-muted-foreground">
+            <div className="font-semibold text-foreground">{format(new Date(), 'EEEE, MMM d')}</div>
             <div>{format(new Date(), 'yyyy')}</div>
           </div>
         </div>
         {/* Toolbar */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-          <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl" data-onboarding="view-switcher">
+          <div className="flex gap-1 p-1 bg-muted rounded-xl" data-onboarding="view-switcher">
             {['day', 'week', 'month', 'list'].map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
                   view === v
-                    ? 'bg-white dark:bg-gray-700 text-primary-700 dark:text-white shadow-sm border-transparent'
-                    : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-card text-foreground shadow-sm border-transparent'
+                    : 'text-muted-foreground border-transparent hover:text-foreground'
                 }`}
               >
                 {v.charAt(0).toUpperCase() + v.slice(1)}
@@ -270,7 +270,7 @@ export function DashboardPage() {
             </button>
             <button
               onClick={() => { setEditingEvent(null); setSelectedDate(format(new Date(), 'yyyy-MM-dd')); setShowForm(true) }}
-              className="inline-flex items-center gap-1.5 min-h-11 px-5 bg-primary-600 text-white rounded-xl text-sm font-semibold shadow-sm shadow-primary-600/20 hover:bg-primary-700 transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-1.5 min-h-11 px-5 bg-primary text-primary-foreground rounded-xl text-sm font-semibold shadow-sm hover:brightness-110 transition-all active:scale-[.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
               data-onboarding="new-event"
             >
               + New Event
@@ -279,7 +279,7 @@ export function DashboardPage() {
         </div>
 
         {/* Keyboard Shortcuts Hint */}
-        <div className="mb-4 flex flex-wrap gap-2 text-xs text-gray-400 dark:text-gray-500">
+        <div className="mb-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
           <span className="shortcut-chip">N = New event</span>
           <span className="shortcut-chip">T = Today</span>
           <span className="shortcut-chip">D = Day</span>
@@ -292,20 +292,20 @@ export function DashboardPage() {
         {/* Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div className="dashboard-stat">
-            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">Total Events</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.total}</div>
+            <div className="text-xs text-muted-foreground mb-1">Total Events</div>
+            <div className="text-2xl font-bold text-foreground">{stats.total}</div>
           </div>
           <div className="dashboard-stat">
-            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">This Week</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.weekEvents}</div>
+            <div className="text-xs text-muted-foreground mb-1">This Week</div>
+            <div className="text-2xl font-bold text-foreground">{stats.weekEvents}</div>
           </div>
           <div className="dashboard-stat">
-            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">Completion Rate</div>
+            <div className="text-xs text-muted-foreground mb-1">Completion Rate</div>
             <div className="text-2xl font-bold text-green-500">{stats.completionRate}%</div>
           </div>
           <div className="dashboard-stat">
-            <div className="text-xs text-gray-400 dark:text-gray-500 mb-1">Integrations Active</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{stats.connectedInts}/{stats.totalInts}</div>
+            <div className="text-xs text-muted-foreground mb-1">Integrations Active</div>
+            <div className="text-2xl font-bold text-foreground">{stats.connectedInts}/{stats.totalInts}</div>
           </div>
         </div>
 
@@ -330,30 +330,30 @@ export function DashboardPage() {
         {/* Upcoming Events */}
         {upcomingEvents.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">Upcoming Events</h2>
+            <h2 className="text-base font-semibold text-foreground mb-3">Upcoming Events</h2>
             <div className="dashboard-panel overflow-hidden">
               {upcomingEvents.map((event) => (
                 <div
                   key={event.id}
                   onClick={() => handleEventClick(event)}
-                  className="flex items-center gap-4 px-4 py-3 border-b border-gray-100 dark:border-gray-800 last:border-b-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="flex items-center gap-4 px-4 py-3 border-b border-border last:border-b-0 cursor-pointer hover:bg-accent transition-colors"
                 >
                   <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: event.color || (event.status === 'pending' ? '#f59e0b' : event.status === 'completed' ? '#22c55e' : '#ef4444') }} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
+                    <div className="text-sm font-medium text-foreground flex items-center gap-1.5">
                       {event.title}
                       {event.category && event.category !== 'default' && (
-                        <span className="text-[10px] px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-400 capitalize">{event.category}</span>
+                        <span className="text-[10px] px-1 py-0.5 rounded bg-surface-2 text-muted-foreground capitalize">{event.category}</span>
                       )}
                     </div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                    <div className="text-xs text-muted-foreground mt-0.5">
                       {event.event_date} &middot; {event.event_time?.slice(0, 5) || 'All day'}
                     </div>
                   </div>
                   <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${statusColors[event.status] || statusColors.pending}`}>
                     {event.status}
                   </span>
-                  <span className="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap">
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
                     {event.event_time?.slice(0, 5) || ''}
                   </span>
                 </div>
