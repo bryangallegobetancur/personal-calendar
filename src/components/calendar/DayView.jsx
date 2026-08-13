@@ -1,11 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { format, addDays, subDays, isToday } from 'date-fns'
 import { EventCard } from './EventCard'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 
-export function DayView({ events, onDateClick, onEventClick }) {
-  const [currentDate, setCurrentDate] = useState(new Date())
+export function DayView({ events, onDateClick, onEventClick, selectedDate }) {
+  const [currentDate, setCurrentDate] = useState(() =>
+    selectedDate ? new Date(`${selectedDate}T00:00:00`) : new Date()
+  )
+
+  useEffect(() => {
+    if (selectedDate) setCurrentDate(new Date(`${selectedDate}T00:00:00`))
+  }, [selectedDate])
 
   const getEventsForHour = (hour) =>
     events.filter((e) => {

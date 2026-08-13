@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
   profile: null,
   loading: true,
@@ -37,19 +37,34 @@ export const useAuthStore = create((set) => ({
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single()
-    if (!error && data) {
-      set({ profile: data })
+      .maybeSingle()
+    if (error) {
+      console.error('Error fetching profile:', error)
+      return
     }
+    if (data) {
+      set({ profile: data })
+      return
+    }
+    const user = get().user
+    const { data: created } = await supabase
+      .from('profiles')
+      .upsert({
+        id: userId,
+        name: user?.user_metadata?.name || '',
+        email: user?.email || '',
+      })
+      .select()
+      .maybeSingle()
+    if (created) set({ profile: created })
   },
 
   updateProfile: async (userId, updates) => {
     const { data, error } = await supabase
       .from('profiles')
-      .update(updates)
-      .eq('id', userId)
+      .upsert({ id: userId, ...updates })
       .select()
-      .single()
+      .maybeSingle()
     if (error) throw error
     set({ profile: data })
     return data

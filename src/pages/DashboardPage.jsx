@@ -23,6 +23,7 @@ export function DashboardPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingEvent, setEditingEvent] = useState(null)
   const [selectedDate, setSelectedDate] = useState('')
+  const [viewDate, setViewDate] = useState(new Date())
   const [filterStatus, setFilterStatus] = useState('all')
   const [filterCategory, setFilterCategory] = useState('all')
   const [searchText, setSearchText] = useState('')
@@ -82,8 +83,8 @@ export function DashboardPage() {
   }
 
   const handleMiniCalendarClick = (date) => {
+    setViewDate(date)
     setView('day')
-    setSelectedDate(format(date, 'yyyy-MM-dd'))
   }
 
   const handleEventClick = (event) => {
@@ -312,7 +313,7 @@ export function DashboardPage() {
         {/* Calendar View */}
         <div className="dashboard-panel calendar-surface">
           {view === 'day' && (
-            <DayView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} />
+            <DayView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} selectedDate={format(viewDate, 'yyyy-MM-dd')} />
           )}
           {view === 'month' && (
             <MonthView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} />
