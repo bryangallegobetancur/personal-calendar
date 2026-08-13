@@ -84,7 +84,6 @@ export function DashboardPage() {
 
   const handleMiniCalendarClick = (date) => {
     setViewDate(date)
-    setView('day')
   }
 
   const handleEventClick = (event) => {
@@ -316,10 +315,10 @@ export function DashboardPage() {
             <DayView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} selectedDate={format(viewDate, 'yyyy-MM-dd')} />
           )}
           {view === 'month' && (
-            <MonthView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} />
+            <MonthView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} selectedDate={format(viewDate, 'yyyy-MM-dd')} />
           )}
           {view === 'week' && (
-            <WeekView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} />
+            <WeekView events={filteredEvents} onDateClick={handleDateClick} onEventClick={handleEventClick} selectedDate={format(viewDate, 'yyyy-MM-dd')} />
           )}
           {view === 'list' && (
             <div className="p-4">

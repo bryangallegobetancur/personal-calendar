@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   startOfMonth,
   endOfMonth,
@@ -13,8 +13,14 @@ import {
 } from 'date-fns'
 import { EventCard } from './EventCard'
 
-export function MonthView({ events, onDateClick, onEventClick }) {
-  const [currentDate, setCurrentDate] = useState(new Date())
+export function MonthView({ events, onDateClick, onEventClick, selectedDate }) {
+  const [currentDate, setCurrentDate] = useState(() =>
+    selectedDate ? new Date(`${selectedDate}T00:00:00`) : new Date()
+  )
+
+  useEffect(() => {
+    if (selectedDate) setCurrentDate(new Date(`${selectedDate}T00:00:00`))
+  }, [selectedDate])
 
   const monthStart = startOfMonth(currentDate)
   const monthEnd = endOfMonth(currentDate)
