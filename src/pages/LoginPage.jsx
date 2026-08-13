@@ -54,7 +54,7 @@ export function LoginPage() {
           {/* Marca (oculta en móvil) */}
           <div className="hidden lg:block">
             <div className="flex items-center gap-3 mb-10">
-              <span className="grid place-items-center w-9 h-9 rounded-xl bg-primary text-primary-foreground text-sm font-bold">PC</span>
+              <img src="/logo.png" alt="Personal Calendar" className="w-9 h-9 rounded-xl object-contain" />
               <span className="font-display text-xl font-bold tracking-[-0.02em]">Personal Calendar</span>
             </div>
             <h1 className="font-display text-4xl font-bold leading-[1.15] tracking-[-0.02em] max-w-md">
@@ -80,7 +80,7 @@ export function LoginPage() {
           {/* Columna del formulario */}
           <div className="mx-auto w-full max-w-md">
             <div className="mb-6 flex items-center justify-center gap-2 lg:hidden">
-              <span className="grid place-items-center w-8 h-8 rounded-lg bg-primary text-primary-foreground text-xs font-bold">PC</span>
+              <img src="/logo.png" alt="Personal Calendar" className="w-8 h-8 rounded-lg object-contain" />
               <span className="font-display text-lg font-bold tracking-[-0.02em]">Personal Calendar</span>
             </div>
 

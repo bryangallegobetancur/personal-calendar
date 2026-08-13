@@ -29,7 +29,7 @@ export function Navbar() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 text-lg font-bold text-foreground">
-            <span className="grid place-items-center w-8 h-8 rounded-xl bg-primary text-primary-foreground text-sm shadow-sm">PC</span>
+            <img src="/logo.png" alt="Personal Calendar" className="w-8 h-8 rounded-lg object-contain" />
             <span className="hidden sm:inline">Personal Calendar</span>
           </Link>
           <div className="flex items-center gap-4">
