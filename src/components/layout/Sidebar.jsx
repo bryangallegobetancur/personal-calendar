@@ -41,32 +41,32 @@ export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
   }, [events])
 
   return (
-    <aside className="w-[280px] flex-shrink-0 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 p-6 fixed top-16 bottom-0 transition-colors hidden lg:flex flex-col gap-7 shadow-sm">
+    <aside className="w-[280px] flex-shrink-0 bg-card border-r border-border p-6 fixed top-16 bottom-0 transition-colors hidden lg:flex flex-col gap-7 shadow-sm">
       {/* Mini Calendar */}
       <section>
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Calendar
         </h3>
         <div className="flex items-center justify-between mb-2">
           <button
             onClick={() => setCurrentDate((d) => subMonths(d, 1))}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-sm px-1"
+            className="text-muted-foreground hover:text-foreground text-sm px-1"
           >
             &lsaquo;
           </button>
-          <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <span className="text-sm font-semibold text-foreground">
             {format(currentDate, 'MMMM yyyy')}
           </span>
           <button
             onClick={() => setCurrentDate((d) => addMonths(d, 1))}
-            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-sm px-1"
+            className="text-muted-foreground hover:text-foreground text-sm px-1"
           >
             &rsaquo;
           </button>
         </div>
         <div className="grid grid-cols-7 gap-[2px] text-xs text-center">
           {dayNames.map((d) => (
-            <span key={d} className="text-gray-400 dark:text-gray-500 font-medium py-1">{d}</span>
+            <span key={d} className="text-muted-foreground font-medium py-1">{d}</span>
           ))}
           {days.map((day) => {
             const isOther = !isSameMonth(day, currentDate)
@@ -77,10 +77,10 @@ export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
                 onClick={() => onMiniCalendarClick?.(day)}
                 className={`py-1.5 rounded-lg cursor-pointer transition-colors ${
                   isTodayDay
-                    ? 'bg-primary-600 text-white font-semibold'
+                    ? 'bg-primary text-primary-foreground font-semibold'
                     : isOther
                       ? 'text-gray-300 dark:text-gray-600'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-gray-800'
+                      : 'text-foreground hover:bg-accent'
                 }`}
               >
                 {format(day, 'd')}
@@ -92,7 +92,7 @@ export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
 
       {/* Integrations */}
       <section data-onboarding="integrations">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Integrations
         </h3>
         <div className="flex flex-col gap-1">
@@ -101,7 +101,7 @@ export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
             return (
               <div
                 key={key}
-                className="flex items-center justify-between px-2.5 py-2 rounded-lg text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center justify-between px-2.5 py-2 rounded-lg text-sm cursor-pointer hover:bg-accent transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <span
@@ -109,7 +109,7 @@ export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
                   >
                     {icon}
                   </span>
-                  <span className="text-gray-700 dark:text-gray-300">{label}</span>
+                  <span className="text-foreground">{label}</span>
                 </div>
                 <span
                   className={`w-2 h-2 rounded-full ${
@@ -124,17 +124,17 @@ export function Sidebar({ integrations, events = [], onMiniCalendarClick }) {
 
       {/* Quick Stats */}
       <section>
-        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">
+        <h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-3">
           Quick Stats
         </h3>
-        <div className="text-sm text-gray-500 dark:text-gray-400 flex flex-col gap-2.5">
+        <div className="text-sm text-muted-foreground flex flex-col gap-2.5">
           <div className="flex justify-between">
             <span>Events today</span>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">{stats.todayEvents}</span>
+            <span className="font-semibold text-foreground">{stats.todayEvents}</span>
           </div>
           <div className="flex justify-between">
             <span>This week</span>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">{stats.weekEvents}</span>
+            <span className="font-semibold text-foreground">{stats.weekEvents}</span>
           </div>
           <div className="flex justify-between">
             <span>Completed</span>

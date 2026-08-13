@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
-import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 
 export function LoginForm() {
@@ -31,7 +30,7 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Email"
+        label="Correo electrónico"
         id="login-email"
         type="email"
         value={email}
@@ -39,7 +38,7 @@ export function LoginForm() {
         required
       />
       <Input
-        label="Password"
+        label="Contraseña"
         id="login-password"
         type="password"
         value={password}
@@ -47,9 +46,9 @@ export function LoginForm() {
         required
       />
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-      <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Signing in...' : 'Sign In'}
-      </Button>
+      <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed">
+        {loading ? 'Iniciando sesión...' : 'Entrar'}
+      </button>
     </form>
   )
 }

@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { useAuthStore } from '../../store/authStore'
-import { Button } from '../ui/Button'
 import { Input } from '../ui/Input'
 
 function getPasswordStrength(password) {
@@ -40,7 +39,7 @@ function PasswordStrengthBar({ password }) {
 function PasswordInput({ label, id, value, onChange, onBlur, showPassword, onToggleShow, error }) {
   return (
     <div className="space-y-1">
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label htmlFor={id} className="block text-sm font-medium text-muted-foreground">
         {label}
       </label>
       <div className="relative">
@@ -51,14 +50,12 @@ function PasswordInput({ label, id, value, onChange, onBlur, showPassword, onTog
           onChange={onChange}
           onBlur={onBlur}
           required
-          className={`w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 transition-colors ${
-            error ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'
-          }`}
+          className={`field pr-10 ${error ? 'border-red-500 dark:border-red-400' : ''}`}
         />
         <button
           type="button"
           onClick={onToggleShow}
-          className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+          className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground"
         >
           {showPassword ? (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,8 +141,8 @@ export function RegisterForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Revisa tu correo</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <h2 className="text-xl font-semibold text-foreground">Revisa tu correo</h2>
+        <p className="text-sm text-muted-foreground">
           Te enviamos un enlace de confirmación a <strong>{email}</strong>.
         </p>
       </div>
@@ -155,7 +152,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Name"
+        label="Nombre"
         id="reg-name"
         type="text"
         value={name}
@@ -163,7 +160,7 @@ export function RegisterForm() {
         required
       />
       <Input
-        label="Email"
+        label="Correo electrónico"
         id="reg-email"
         type="email"
         value={email}
@@ -171,7 +168,7 @@ export function RegisterForm() {
         required
       />
       <PasswordInput
-        label="Password"
+        label="Contraseña"
         id="reg-password"
         value={password}
         onChange={handlePasswordChange}
@@ -180,7 +177,7 @@ export function RegisterForm() {
       />
       <PasswordStrengthBar password={password} />
       <PasswordInput
-        label="Confirm Password"
+        label="Confirmar contraseña"
         id="reg-confirm-password"
         value={confirmPassword}
         onChange={handleConfirmPasswordChange}
@@ -190,9 +187,9 @@ export function RegisterForm() {
         error={passwordMismatch ? 'Las contraseñas no coinciden' : ''}
       />
       {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-      <Button type="submit" disabled={loading} className="w-full">
-        {loading ? 'Creating account...' : 'Create Account'}
-      </Button>
+      <button type="submit" disabled={loading} className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed">
+        {loading ? 'Creando cuenta...' : 'Crear cuenta'}
+      </button>
     </form>
   )
 }
