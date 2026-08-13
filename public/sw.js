@@ -1,9 +1,11 @@
-const CACHE_NAME = 'personal-calendar-v1'
+const CACHE_NAME = 'personal-calendar-v2'
 
 const STATIC_ASSETS = [
   '/',
   '/login',
   '/manifest.json',
+  '/icon-192.png',
+  '/icon-512.png',
 ]
 
 self.addEventListener('install', (event) => {
