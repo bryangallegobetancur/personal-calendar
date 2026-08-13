@@ -25,8 +25,8 @@ export async function requestNotificationPermission() {
 export function showBrowserNotification(title, options = {}) {
   if (!('Notification' in window) || Notification.permission !== 'granted') return
   return new Notification(title, {
-    icon: '/favicon.ico',
-    badge: '/favicon.ico',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
     ...options,
   })
 }
