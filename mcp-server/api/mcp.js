@@ -9,10 +9,12 @@ function sendJson(res, status, body) {
 }
 
 export default async function handler(req, res) {
-  const apiKey = process.env.MCP_API_KEY
+  const apiKey = process.env.MCP_API_KEY?.trim().replace(/^Bearer\s+/i, '')
   const header = req.headers.authorization
   const provided =
-    header && header.startsWith('Bearer ') ? header.slice('Bearer '.length) : req.headers['x-api-key']
+    header && /^Bearer\s+/i.test(header)
+      ? header.replace(/^Bearer\s+/i, '').trim()
+      : String(req.headers['x-api-key'] || '').trim()
 
   if (!apiKey) {
     return sendJson(res, 500, { error: 'Server misconfigured: MCP_API_KEY missing' })
