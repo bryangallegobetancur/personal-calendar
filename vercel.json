@@ -1,7 +1,13 @@
 {
   "buildCommand": "npm install && npm run build",
   "outputDirectory": "dist",
+  "functions": {
+    "api/mcp.js": {
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
+    { "source": "/mcp", "destination": "/api/mcp" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
