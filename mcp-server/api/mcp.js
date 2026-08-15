@@ -1,50 +1,44 @@
-import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js'
 import { createMcpServer } from '../src/server.js'
 
-const API_KEY = process.env.MCP_API_KEY
-
-function unauthorized() {
-  return new Response(JSON.stringify({ error: 'Unauthorized: invalid API key' }), {
-    status: 401,
-    headers: { 'Content-Type': 'application/json' },
-  })
+function sendJson(res, status, body) {
+  if (res.headersSent) return
+  res.statusCode = status
+  res.setHeader('Content-Type', 'application/json')
+  res.end(JSON.stringify(body))
 }
 
-export default async function handler(request) {
-  if (!API_KEY) {
-    return new Response(JSON.stringify({ error: 'Server misconfigured: MCP_API_KEY missing' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  const header = request.headers.get('authorization')
+export default async function handler(req, res) {
+  const apiKey = process.env.MCP_API_KEY
+  const header = req.headers.authorization
   const provided =
-    header && header.startsWith('Bearer ') ? header.slice('Bearer '.length) : request.headers.get('x-api-key')
-  if (!provided || provided !== API_KEY) {
-    return unauthorized()
+    header && header.startsWith('Bearer ') ? header.slice('Bearer '.length) : req.headers['x-api-key']
+
+  if (!apiKey) {
+    return sendJson(res, 500, { error: 'Server misconfigured: MCP_API_KEY missing' })
   }
 
-  const method = request.method
-  if (!['POST', 'GET', 'DELETE'].includes(method)) {
-    return new Response('Method Not Allowed', { status: 405 })
+  if (!provided || provided !== apiKey) {
+    return sendJson(res, 401, { error: 'Unauthorized: invalid API key' })
   }
 
-  const server = createMcpServer()
-  const transport = new WebStandardStreamableHTTPServerTransport({
-    enableJsonResponse: true,
-  })
-
-  await server.connect(transport)
+  if (!['POST', 'GET', 'DELETE'].includes(req.method)) {
+    res.statusCode = 405
+    return res.end('Method Not Allowed')
+  }
 
   try {
-    return await transport.handleRequest(request)
+    const server = createMcpServer()
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined,
+      enableJsonResponse: true,
+    })
+
+    await server.connect(transport)
+    await transport.handleRequest(req, res, req.body)
   } catch (err) {
     console.error('MCP handler error:', err)
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    sendJson(res, 500, { error: err instanceof Error ? err.message : String(err) })
   }
 }
 
