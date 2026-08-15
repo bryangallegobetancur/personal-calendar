@@ -8,13 +8,21 @@ function sendJson(res, status, body) {
   res.end(JSON.stringify(body))
 }
 
+function normalizeKey(value) {
+  return String(value || '')
+    .trim()
+    .replace(/^Bearer\s+/i, '')
+    .replace(/^(['"])(.*)\1$/, '$2')
+    .trim()
+}
+
 export default async function handler(req, res) {
-  const apiKey = process.env.MCP_API_KEY?.trim().replace(/^Bearer\s+/i, '')
+  const apiKey = normalizeKey(process.env.MCP_API_KEY)
   const header = req.headers.authorization
   const provided =
     header && /^Bearer\s+/i.test(header)
-      ? header.replace(/^Bearer\s+/i, '').trim()
-      : String(req.headers['x-api-key'] || '').trim()
+      ? normalizeKey(header)
+      : normalizeKey(req.headers['x-api-key'])
 
   if (!apiKey) {
     return sendJson(res, 500, { error: 'Server misconfigured: MCP_API_KEY missing' })
