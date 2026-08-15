@@ -1,15 +1,19 @@
-import { supabase } from './supabase.js'
+import { getSupabase } from './supabase.js'
 
-const ownerUserId = process.env.MCP_USER_ID
-if (!ownerUserId) {
-  throw new Error('Missing MCP_USER_ID environment variable (the Supabase user UUID whose calendar is exposed)')
+function ownerUserId() {
+  const id = process.env.MCP_USER_ID
+  if (!id) {
+    throw new Error('Missing MCP_USER_ID environment variable (the Supabase user UUID whose calendar is exposed)')
+  }
+  return id
+}
+
+function scoped() {
+  return getSupabase().from('events').eq('user_id', ownerUserId())
 }
 
 export async function listEvents({ startDate, endDate, status, category }) {
-  let query = supabase
-    .from('events')
-    .select('*')
-    .eq('user_id', ownerUserId)
+  let query = scoped()
     .order('event_date', { ascending: true })
     .order('event_time', { ascending: true })
 
@@ -24,12 +28,7 @@ export async function listEvents({ startDate, endDate, status, category }) {
 }
 
 export async function getEvent(id) {
-  const { data, error } = await supabase
-    .from('events')
-    .select('*')
-    .eq('id', id)
-    .eq('user_id', ownerUserId)
-    .single()
+  const { data, error } = await scoped().eq('id', id).single()
   if (error) {
     if (error.code === 'PGRST116') throw new Error('Event not found')
     throw new Error(`Supabase error: ${error.message}`)
@@ -38,10 +37,7 @@ export async function getEvent(id) {
 }
 
 export async function searchEvents(queryText) {
-  const { data, error } = await supabase
-    .from('events')
-    .select('*')
-    .eq('user_id', ownerUserId)
+  const { data, error } = await scoped()
     .or(`title.ilike.%${queryText}%,description.ilike.%${queryText}%,category.ilike.%${queryText}%`)
     .order('event_date', { ascending: true })
   if (error) throw new Error(`Supabase error: ${error.message}`)
@@ -49,9 +45,9 @@ export async function searchEvents(queryText) {
 }
 
 export async function createEvent(payload) {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('events')
-    .insert([{ ...payload, user_id: ownerUserId }])
+    .insert([{ ...payload, user_id: ownerUserId() }])
     .select()
     .single()
   if (error) throw new Error(`Supabase error: ${error.message}`)
@@ -59,13 +55,7 @@ export async function createEvent(payload) {
 }
 
 export async function updateEvent(id, updates) {
-  const { data, error } = await supabase
-    .from('events')
-    .update(updates)
-    .eq('id', id)
-    .eq('user_id', ownerUserId)
-    .select()
-    .single()
+  const { data, error } = await scoped().eq('id', id).update(updates).select().single()
   if (error) {
     if (error.code === 'PGRST116') throw new Error('Event not found')
     throw new Error(`Supabase error: ${error.message}`)
@@ -74,22 +64,13 @@ export async function updateEvent(id, updates) {
 }
 
 export async function deleteEvent(id) {
-  const { error } = await supabase
-    .from('events')
-    .delete()
-    .eq('id', id)
-    .eq('user_id', ownerUserId)
+  const { error } = await scoped().eq('id', id).delete()
   if (error) throw new Error(`Supabase error: ${error.message}`)
   return { ok: true, id }
 }
 
 export async function checkConflict({ eventDate, eventTime, durationMinutes, excludeId }) {
-  const { data, error } = await supabase
-    .from('events')
-    .select('*')
-    .eq('user_id', ownerUserId)
-    .eq('event_date', eventDate)
-    .neq('status', 'cancelled')
+  const { data, error } = await scoped().eq('event_date', eventDate).neq('status', 'cancelled')
   if (error) throw new Error(`Supabase error: ${error.message}`)
 
   const newStart = new Date(`${eventDate}T${eventTime}`)
@@ -107,10 +88,10 @@ export async function checkConflict({ eventDate, eventTime, durationMinutes, exc
 }
 
 export async function listNotifications({ eventId, status, channel }) {
-  let query = supabase
+  let query = getSupabase()
     .from('notifications')
     .select('*')
-    .eq('user_id', ownerUserId)
+    .eq('user_id', ownerUserId())
     .order('created_at', { ascending: false })
 
   if (eventId) query = query.eq('event_id', eventId)
@@ -123,10 +104,10 @@ export async function listNotifications({ eventId, status, channel }) {
 }
 
 export async function listIntegrations() {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('integrations')
     .select('service, connected, connected_at, token_expires_at')
-    .eq('user_id', ownerUserId)
+    .eq('user_id', ownerUserId())
   if (error) throw new Error(`Supabase error: ${error.message}`)
   return data || []
 }
